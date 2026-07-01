@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import router
+from app.routes.chat_route import router
 
 app = FastAPI(title="AI Backend API")
 
