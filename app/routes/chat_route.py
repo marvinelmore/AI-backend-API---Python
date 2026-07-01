@@ -1,17 +1,20 @@
 import json
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from app.models.chat import ChatRequest
 from app.core.redis_client import redis_client
 from app.services.ai_service import stream_chat
 from collections import defaultdict
+from app.auth.dependencies import get_current_user
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 chat_sessions = defaultdict(list)
 
 @router.post("/stream")
-async def chat_stream(request: ChatRequest):
+async def chat_stream(
+        request: ChatRequest,
+        user=Depends(get_current_user)):
 
     session_id = request.session_id
     prompt = request.prompt
