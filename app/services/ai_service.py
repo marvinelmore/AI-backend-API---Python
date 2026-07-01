@@ -28,8 +28,9 @@ def stream_chat(messages: list):
     )
 
     for chunk in stream:
-        if chunk.choices[0].delta.content:
-            yield chunk.choices[0].delta.content
+        content = chunk.choices[0].delta.content
+        if content:
+            yield content
 
 # async def generate_response(prompt: str):
 #     response = client.chat.completions.create(

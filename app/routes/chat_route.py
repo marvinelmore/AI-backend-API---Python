@@ -40,7 +40,7 @@ async def chat_stream(request: ChatRequest):
         "content": request.prompt
     })
 
-    def event_stream():
+    def generate():
         full_response = ""
 
         for chunk in stream_chat(chat_history):
@@ -52,7 +52,7 @@ async def chat_stream(request: ChatRequest):
             "content": full_response
         })
 
-    return StreamingResponse(event_stream(), media_type="text/plain")
+    return StreamingResponse(generate(), media_type="text/plain")
 
 
 # @router.post("/chat")
