@@ -19,6 +19,18 @@ async def chat_with_ai(prompt: str):
         print(f"OpenAI error: {e}")
         return "AI service is temporarily unavailable."
 
+def stream_chat(messages: list):
+
+    stream = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages,
+        stream=True
+    )
+
+    for chunk in stream:
+        if chunk.choices[0].delta.content:
+            yield chunk.choices[0].delta.content
+
 # async def generate_response(prompt: str):
 #     response = client.chat.completions.create(
 #         model="gpt-4o-mini",
