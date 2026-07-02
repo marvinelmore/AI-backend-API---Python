@@ -1,9 +1,10 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
+from app.core.config import settings
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 async def chat_with_ai(prompt: str):
     try:
