@@ -14,11 +14,13 @@ chat_sessions = defaultdict(list)
 @router.post("/stream")
 async def chat_stream(
         request: ChatRequest,
-        user=Depends(get_current_user)):
+        current_user=Depends(get_current_user)):
 
     session_id = request.session_id
     prompt = request.prompt
-    key = f"session:{session_id}"
+    username = current_user.username
+
+    key = f"user:{username}:session:{session_id}"
 
     # load history from Redis
     history_raw = redis_client.get(key)

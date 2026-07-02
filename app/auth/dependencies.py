@@ -1,11 +1,13 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
 from app.auth.jwt_handler import verify_token
+from app.models.user import CurrentUser
 
 security = HTTPBearer()
 
-def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+def get_current_user(
+        credentials: HTTPAuthorizationCredentials = Depends(security)
+):
 
     token = credentials.credentials
     payload = verify_token(token)
@@ -16,4 +18,6 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
             detail="Invalid or expired token"
         )
 
-    return payload
+    return CurrentUser(
+        username=payload["sub"]
+    )
