@@ -7,6 +7,7 @@ from app.core.redis_client import redis_client
 from app.services.ai_service import stream_chat
 from collections import defaultdict
 from app.auth.dependencies import get_current_user
+from app.core.logger import logger
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 chat_sessions = defaultdict(list)
@@ -24,13 +25,17 @@ async def chat_stream(
 
     # load history from Redis
     history_raw = redis_client.get(key)
+    logger.info(
+        f"User '{username}' started session '{session_id}'."
+    )
+    logger.info(
+        f"Loaded Redis history for {username}:{session_id}"
+    )
 
     if history_raw:
         history = json.loads(history_raw)
     else:
         history = []
-
-    #history = chat_sessions[session_id]
 
     history.append({
         "role": "user",
@@ -44,6 +49,9 @@ async def chat_stream(
             full_response += chunk
             yield chunk
 
+        logger.info(
+            f"OpenAI response completed for '{username}'."
+        )
         history.append({
             "role": "assistant",
             "content": full_response
@@ -51,5 +59,8 @@ async def chat_stream(
 
         #chat_sessions[session_id] = history
         redis_client.set(key, json.dumps(history))
+        logger.info(
+            f"Saved Redis history for '{username}:{session_id}'."
+        )
 
     return StreamingResponse(generate(), media_type="text/plain")
