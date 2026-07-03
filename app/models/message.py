@@ -34,3 +34,5 @@ class Message(Base):
         "Conversation",
         back_populates="messages"
     )
+
+    conversation = relationship("Conversation", back_populates="messages")

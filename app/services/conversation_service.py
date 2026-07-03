@@ -1,63 +1,86 @@
 import json
 
 from fastapi.responses import StreamingResponse
+from sqlalchemy.orm import Session
 
 from app.core.logger import logger
 from app.core.redis_client import redis_client
+from app.models.user import User
 from app.services.ai_service import stream_chat
-from sqlalchemy.orm import Session
+from app.models.conversation import Conversation
+from app.models.message import Message
 
-def stream_conversation_response(
-    db: Session,
-    username: str,
-    session_id: str,
-    prompt: str
-):
-    key = f"user:{username}:session:{session_id}"
+class ConversationService:
 
-    logger.info(
-        f"User '{username}' started session '{session_id}'."
-    )
+    def __init__(self, db: Session):
+        self.db = db
 
-    history_raw = redis_client.get(key)
+    def get_or_create_user(self, username: str):
+        user = self.db.query(User).filter(
+            User.username == username
+        ).first()
 
-    logger.info(
-        f"Loaded Redis history for '{username}:{session_id}'."
-    )
+        if user:
+            return user
 
-    if history_raw:
-        history = json.loads(history_raw)
-    else:
-        history = []
+        user = User(
+            username=username,
+            password_hash="oauth_or_jwt_user"
+        )
 
-    history.append({
-        "role": "user",
-        "content": prompt
-    })
+        self.db.add(user)
+        self.db.commit()
+        self.db.refresh(user)
 
-    def generate():
-        full_response = ""
+        logger.info(f"Created new user record for '{username}'.")
 
-        for chunk in stream_chat(history):
-            full_response += chunk
-            yield chunk
+        return user
+
+    def stream_response(
+        self,
+        username: str,
+        session_id: str,
+        prompt: str
+    ):
+        key = f"user:{username}:session:{session_id}"
+
+        user = self.get_or_create_user(username)
 
         logger.info(
-            f"OpenAI response completed for '{username}'."
+            f"User '{user.username}' started session '{session_id}'."
         )
+
+        history_raw = redis_client.get(key)
+
+        if history_raw:
+            history = json.loads(history_raw)
+        else:
+            history = []
 
         history.append({
-            "role": "assistant",
-            "content": full_response
+            "role": "user",
+            "content": prompt
         })
 
-        redis_client.set(key, json.dumps(history))
+        def generate():
+            full_response = ""
 
-        logger.info(
-            f"Saved Redis history for '{username}:{session_id}'."
+            for chunk in stream_chat(history):
+                full_response += chunk
+                yield chunk
+
+            history.append({
+                "role": "assistant",
+                "content": full_response
+            })
+
+            redis_client.set(key, json.dumps(history))
+
+            logger.info(
+                f"Saved Redis history for '{username}:{session_id}'."
+            )
+
+        return StreamingResponse(
+            generate(),
+            media_type="text/plain"
         )
-
-    return StreamingResponse(
-        generate(),
-        media_type="text/plain"
-    )
