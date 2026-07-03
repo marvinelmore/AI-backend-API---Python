@@ -6,6 +6,7 @@ from app.core.logger import logger
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+
 class LoginRequest(BaseModel):
     username: str
 

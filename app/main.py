@@ -16,6 +16,7 @@ app.include_router(auth_router)
 app.include_router(chat_router)
 app.include_router(health_router)
 
+
 @app.get("/")
 def home():
     return {"message": "AI Backend API Running"}
