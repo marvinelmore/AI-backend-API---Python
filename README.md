@@ -1,5 +1,29 @@
 # AI-backend-API---Python
 
+<p align="center">
+  <img src="assets/dev-tools.png" alt="AI Backend API Banner" width="100%">
+</p>
+
+<h1 align="center">AI Backend API</h1>
+
+<p align="center">
+Production-ready AI Backend built with FastAPI, OpenAI, Redis, Docker, and JWT Authentication.
+</p>
+
+<p align="center">
+  <img src="assets/AI-backend-API---Python.gif" alt="AI Backend API Gif" width="100%">
+</p>
+
+<p align="center">
+
+![Python](...)
+![FastAPI](...)
+![Redis](...)
+![Docker](...)
+![JWT](...)
+![OpenAI](...)
+
+</p>
 A production-style AI backend built with **FastAPI**, **OpenAI**, **Redis**, and **JWT Authentication**.
 
 This project demonstrates modern backend engineering practices, including secure authentication, streaming AI responses, centralized configuration, structured logging, Redis-backed conversation memory, and production-ready API architecture.
