@@ -43,8 +43,12 @@ class ConversationService:
         prompt: str
     ):
         key = f"user:{username}:session:{session_id}"
-
         user = self.get_or_create_user(username)
+
+        conversation = self.get_or_create_conversation(
+            user_id=user.id,
+            session_id=session_id
+        )
 
         logger.info(
             f"User '{user.username}' started session '{session_id}'."
@@ -62,6 +66,12 @@ class ConversationService:
             "content": prompt
         })
 
+        self.save_message(
+            conversation_id=conversation.id,
+            role="user",
+            content=prompt
+        )
+
         def generate():
             full_response = ""
 
@@ -74,6 +84,12 @@ class ConversationService:
                 "content": full_response
             })
 
+            self.save_message(
+                conversation_id=conversation.id,
+                role="assistant",
+                content=full_response
+            )
+
             redis_client.set(key, json.dumps(history))
 
             logger.info(
@@ -84,3 +100,45 @@ class ConversationService:
             generate(),
             media_type="text/plain"
         )
+
+    def get_or_create_conversation(
+            self,
+            user_id: int,
+            session_id: str
+    ):
+        conversation = self.db.query(Conversation).filter(
+            Conversation.user_id == user_id,
+            Conversation.title == session_id
+        ).first()
+
+        if conversation:
+            return conversation
+
+        conversation = Conversation(
+            user_id=user_id,
+            title=session_id
+        )
+
+        self.db.add(conversation)
+        self.db.commit()
+        self.db.refresh(conversation)
+
+        return conversation
+
+    def save_message(
+            self,
+            conversation_id: int,
+            role: str,
+            content: str
+    ):
+        message = Message(
+            conversation_id=conversation_id,
+            role=role,
+            content=content
+        )
+
+        self.db.add(message)
+        self.db.commit()
+        self.db.refresh(message)
+
+        return message
