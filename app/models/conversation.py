@@ -29,4 +29,8 @@ class Conversation(Base):
     )
 
     user = relationship("User", back_populates="conversations")
-    messages = relationship("Message", back_populates="conversation")
+    messages = relationship(
+        "Message",
+        back_populates="conversation",
+        cascade="all, delete-orphan"
+    )

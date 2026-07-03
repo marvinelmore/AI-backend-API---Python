@@ -9,6 +9,7 @@ from app.models.user import User
 from app.services.ai_service import stream_chat
 from app.models.conversation import Conversation
 from app.models.message import Message
+from sqlalchemy import and_
 
 class ConversationService:
 
@@ -142,3 +143,57 @@ class ConversationService:
         self.db.refresh(message)
 
         return message
+
+    def get_user_conversations(self, username: str):
+        user = self.get_or_create_user(username)
+        return self.db.query(Conversation).filter(
+         and_(
+          Conversation.user_id == user.id
+         )).order_by(
+            Conversation.created_at.desc()
+         ).all()
+
+    def get_conversation_messages(
+            self,
+            username: str,
+            conversation_id: int
+    ):
+        user = self.get_or_create_user(username)
+
+        conversation = self.db.query(Conversation).filter(
+            and_(
+                Conversation.id == conversation_id,
+                Conversation.user_id == user.id
+            )
+        ).first()
+
+        if not conversation:
+            return None
+
+        return self.db.query(Message).filter(
+            and_(
+                Message.conversation_id == conversation.id
+            )
+        ).order_by(
+            Message.created_at.asc()
+        ).all()
+
+    def delete_conversation(
+            self,
+            username: str,
+            conversation_id: int
+    ):
+        user = self.get_or_create_user(username)
+        conversation = self.db.query(Conversation).filter(
+            and_(
+                Conversation.id == conversation_id,
+                Conversation.user_id == user.id
+            )).first()
+
+        if not conversation:
+            return False
+
+        self.db.delete(conversation)
+        self.db.commit()
+
+        return True
