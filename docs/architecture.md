@@ -21,6 +21,23 @@
       Streaming Response
 ```
 
+```text
+Client
+   │
+   ▼
+Route
+   │
+   ▼
+Conversation Service
+   │
+   ├────────► PostgreSQL
+   │
+   └────────► Redis
+                  │
+                  ▼
+              OpenAI
+```
+
 ## Request Flow
 
 1. User logs in and receives a JWT.
