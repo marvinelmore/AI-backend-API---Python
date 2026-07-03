@@ -5,9 +5,10 @@ from fastapi.responses import StreamingResponse
 from app.core.logger import logger
 from app.core.redis_client import redis_client
 from app.services.ai_service import stream_chat
-
+from sqlalchemy.orm import Session
 
 def stream_conversation_response(
+    db: Session,
     username: str,
     session_id: str,
     prompt: str
