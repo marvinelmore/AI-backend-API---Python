@@ -1,7 +1,7 @@
 # AI-backend-API---Python
 
 <p align="center">
-  <img src="assets/dev-tools.png" alt="AI Backend API Banner" width="100%">
+  <img src="app/assets/dev-tools.png" alt="AI Backend API Banner" width="100%">
 </p>
 
 <h1 align="center">AI Backend API</h1>
@@ -11,17 +11,17 @@ Production-ready AI Backend built with FastAPI, OpenAI, Redis, Docker, and JWT A
 </p>
 
 <p align="center">
-  <img src="assets/AI-backend-API---Python.gif" alt="AI Backend API Gif" width="100%">
+  <img src="app/assets/AI-backend-API---Python.gif" alt="AI Backend API Gif" width="100%">
 </p>
 
 <p align="center">
 
-![Python](...)
-![FastAPI](...)
-![Redis](...)
-![Docker](...)
-![JWT](...)
-![OpenAI](...)
+![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688?logo=fastapi)
+![OpenAI](https://img.shields.io/badge/OpenAI-API-412991?logo=openai)
+![Redis](https://img.shields.io/badge/Redis-Database-DC382D?logo=redis)
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker)
+![JWT](https://img.shields.io/badge/JWT-Authentication-black?logo=jsonwebtokens)
 
 </p>
 A production-style AI backend built with **FastAPI**, **OpenAI**, **Redis**, and **JWT Authentication**.
