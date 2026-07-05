@@ -96,4 +96,3 @@ class ConversationRepository:
         self.db.commit()
 
         return True
-    

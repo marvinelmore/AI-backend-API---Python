@@ -17,7 +17,7 @@ from app.services.title_service import TitleService
 from app.services.cache_service import CacheService
 from app.services.message_service import MessageService
 from app.services.conversation_repository import ConversationRepository
-
+from app.services.user_service import UserService
 
 class ConversationService:
 
@@ -27,6 +27,7 @@ class ConversationService:
         self.cache_service = CacheService()
         self.message_service = MessageService(db)
         self.conversation_repository = ConversationRepository(db)
+        self.user_service = UserService(db)
 
     def get_or_create_user(self, username: str):
         user = self.db.query(User).filter(
@@ -61,7 +62,7 @@ class ConversationService:
             conversation_id=conversation_id
         )
 
-        user = self.get_or_create_user(username)
+        user = self.user_service.get_or_create_user(username)
 
         conversation = self.conversation_repository.get_by_id_for_user(
             conversation_id=conversation_id,
@@ -155,7 +156,7 @@ class ConversationService:
             username: str,
             title: str = "New Conversation"
     ):
-        user = self.get_or_create_user(username)
+        user = self.user_service.get_or_create_user(username)
 
         conversation = Conversation(
             user_id=user.id,
@@ -188,7 +189,7 @@ class ConversationService:
         return message
 
     def get_user_conversations(self, username: str):
-        user = self.get_or_create_user(username)
+        user = self.user_service.get_or_create_user(username)
         return self.db.query(Conversation).filter(
          and_(
           Conversation.user_id == user.id
@@ -201,7 +202,7 @@ class ConversationService:
             username: str,
             conversation_id: int
     ):
-        user = self.get_or_create_user(username)
+        user = self.user_service.get_or_create_user(username)
 
         conversation = self.db.query(Conversation).filter(
             and_(
@@ -226,7 +227,7 @@ class ConversationService:
             username: str,
             conversation_id: int
     ):
-        user = self.get_or_create_user(username)
+        user = self.user_service.get_or_create_user(username)
         conversation = self.db.query(Conversation).filter(
             and_(
                 Conversation.id == conversation_id,
@@ -246,7 +247,7 @@ class ConversationService:
             username: str,
             conversation_id: int
     ):
-        user = self.get_or_create_user(username)
+        user = self.user_service.get_or_create_user(username)
 
         return self.db.query(Conversation).filter(
             and_(
@@ -260,7 +261,7 @@ class ConversationService:
             conversation_id: int,
             title: str
     ):
-        user = self.get_or_create_user(username)
+        user = self.user_service.get_or_create_user(username)
 
         conversation = self.db.query(Conversation).filter(
             and_(
