@@ -44,9 +44,19 @@ class ConversationService:
     def stream_response(
         self,
         username: str,
-        session_id: str,
+        conversation_id: int,
         prompt: str
     ):
+
+        conversation = self.get_conversation_by_id(
+            username=username,
+            conversation_id=conversation_id
+        )
+
+        if not conversation:
+            return None
+
+        session_id = conversation.session_id
         key = f"user:{username}:session:{session_id}"
         user = self.get_or_create_user(username)
 
@@ -225,3 +235,16 @@ class ConversationService:
         self.db.commit()
 
         return True
+
+    def get_conversation_by_id(
+            self,
+            username: str,
+            conversation_id: int
+    ):
+        user = self.get_or_create_user(username)
+
+        return self.db.query(Conversation).filter(
+            and_(
+                Conversation.id == conversation_id,
+                Conversation.user_id == user.id
+            )).first()

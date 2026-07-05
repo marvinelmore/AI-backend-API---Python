@@ -1,6 +1,6 @@
 import json
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from app.models.chat import ChatRequest
 from app.core.redis_client import redis_client
@@ -15,17 +15,26 @@ from app.database.dependencies import get_db
 router = APIRouter(prefix="/chat", tags=["Chat"])
 chat_sessions = defaultdict(list)
 
-@router.post("/stream")
+@router.post("/stream/{conversation_id}")
 async def chat_stream(
+    conversation_id: int,
     request: ChatRequest,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 
 ):
 
-    conversation_service = ConversationService(db)
-    return conversation_service.stream_response(
+    service = ConversationService(db)
+    response = service.stream_response(
         username=current_user.username,
-        session_id=request.session_id,
+        conversation_id=conversation_id,
         prompt=request.prompt
     )
+
+    if response is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found"
+
+        )
+    return response
