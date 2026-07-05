@@ -13,12 +13,13 @@ from app.services.ai_service import (
 from app.models.conversation import Conversation
 from app.models.message import Message
 from sqlalchemy import and_
-
+from app.services.title_service import TitleService
 
 class ConversationService:
 
     def __init__(self, db: Session):
         self.db = db
+        self.title_service = TitleService()
 
     def get_or_create_user(self, username: str):
         user = self.db.query(User).filter(
@@ -133,10 +134,7 @@ class ConversationService:
         if conversation:
             return conversation
 
-        title = generate_conversation_title(prompt)
-
-        if len(title) > 60:
-            title = title[:60]
+        title = self.title_service.generate_title(prompt)
 
         conversation = Conversation(
             user_id=user_id,
