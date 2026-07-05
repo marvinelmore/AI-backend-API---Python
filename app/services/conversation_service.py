@@ -124,14 +124,19 @@ class ConversationService:
             prompt: str
     ):
         conversation = self.db.query(Conversation).filter(
- Conversation.user_id == user_id,
-          Conversation.title == session_id
+            and_(
+                Conversation.user_id == user_id,
+                Conversation.session_id == session_id
+            )
         ).first()
 
         if conversation:
             return conversation
 
         title = generate_conversation_title(prompt)
+
+        if len(title) > 60:
+            title = title[:60]
 
         conversation = Conversation(
             user_id=user_id,

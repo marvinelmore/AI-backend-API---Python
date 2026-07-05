@@ -39,13 +39,21 @@ def generate_conversation_title(prompt: str):
         messages=[
             {
                 "role": "system",
-                "content": "Generate a short conversation title. Use 3 to 6 words. No quotes. No punctuation at the end."
+                "content": (
+                    "Create a short title for this conversation. "
+                    "Return ONLY the title. "
+                    "Use 3 to 6 words. "
+                    "Do not answer the question. "
+                    "Do not explain anything. "
+                    "No quotes. No period."
+                )
             },
             {
                 "role": "user",
                 "content": prompt
             }
-        ]
+        ],
+        max_tokens=12
     )
 
     return response.choices[0].message.content.strip()
