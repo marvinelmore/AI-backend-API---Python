@@ -6,7 +6,10 @@ from sqlalchemy.orm import Session
 from app.core.logger import logger
 from app.core.redis_client import redis_client
 from app.models.user import User
-from app.services.ai_service import stream_chat
+from app.services.ai_service import (
+    stream_chat,
+    generate_conversation_title
+)
 from app.models.conversation import Conversation
 from app.models.message import Message
 from sqlalchemy import and_
@@ -48,7 +51,8 @@ class ConversationService:
 
         conversation = self.get_or_create_conversation(
             user_id=user.id,
-            session_id=session_id
+            session_id=session_id,
+            prompt=prompt
         )
 
         logger.info(
@@ -105,19 +109,23 @@ class ConversationService:
     def get_or_create_conversation(
             self,
             user_id: int,
-            session_id: str
+            session_id: str,
+            prompt: str
     ):
         conversation = self.db.query(Conversation).filter(
-            Conversation.user_id == user_id,
+   Conversation.user_id == user_id,
             Conversation.title == session_id
         ).first()
 
         if conversation:
             return conversation
 
+        title = generate_conversation_title(prompt)
+
         conversation = Conversation(
             user_id=user_id,
-            title=session_id
+            session_id=session_id,
+            title=title
         )
 
         self.db.add(conversation)

@@ -28,6 +28,12 @@ class Conversation(Base):
         default=datetime.utcnow
     )
 
+    session_id = Column(
+        String,
+        index=True,
+        nullable=False
+    )
+
     user = relationship("User", back_populates="conversations")
     messages = relationship(
         "Message",

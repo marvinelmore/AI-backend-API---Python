@@ -33,23 +33,19 @@ def stream_chat(messages: list):
         if content:
             yield content
 
-# async def generate_response(prompt: str):
-#     response = client.chat.completions.create(
-#         model="gpt-4o-mini",
-#         messages=[
-#             {"role": "user", "content": prompt}
-#         ]
-#     )
-#
-#     return {"result": response.choices[0].message.content}
-#
-#
-# async def summarize_text(text: str):
-#     response = client.chat.completions.create(
-#         model="gpt-4o-mini",
-#         messages=[
-#             {"role": "user", "content": f"Summarize this:\n{text}"}
-#         ]
-#     )
-#
-#     return {"summary": response.choices[0].message.content}
+def generate_conversation_title(prompt: str):
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "Generate a short conversation title. Use 3 to 6 words. No quotes. No punctuation at the end."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+
+    return response.choices[0].message.content.strip()
