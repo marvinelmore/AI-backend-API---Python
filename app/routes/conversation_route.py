@@ -1,11 +1,31 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from pydantic import BaseModel
 from app.auth.dependencies import get_current_user
 from app.database.dependencies import get_db
 from app.services.conversation_service import ConversationService
 
 router = APIRouter(prefix="/conversations", tags=["Conversations"])
+
+
+class CreateConversationRequest(BaseModel):
+    title: str = "New Conversation"
+
+
+@router.post("")
+async def create_conversation(
+    request: CreateConversationRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    service = ConversationService(db)
+
+    conversation = service.create_conversation(
+        username=current_user.username,
+        title=request.title
+    )
+
+    return conversation
 
 
 @router.get("")

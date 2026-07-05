@@ -1,5 +1,5 @@
 import json
-
+from uuid import uuid4
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
@@ -13,6 +13,7 @@ from app.services.ai_service import (
 from app.models.conversation import Conversation
 from app.models.message import Message
 from sqlalchemy import and_
+
 
 class ConversationService:
 
@@ -113,8 +114,8 @@ class ConversationService:
             prompt: str
     ):
         conversation = self.db.query(Conversation).filter(
-   Conversation.user_id == user_id,
-            Conversation.title == session_id
+ Conversation.user_id == user_id,
+          Conversation.title == session_id
         ).first()
 
         if conversation:
@@ -125,6 +126,25 @@ class ConversationService:
         conversation = Conversation(
             user_id=user_id,
             session_id=session_id,
+            title=title
+        )
+
+        self.db.add(conversation)
+        self.db.commit()
+        self.db.refresh(conversation)
+
+        return conversation
+
+    def create_conversation(
+            self,
+            username: str,
+            title: str = "New Conversation"
+    ):
+        user = self.get_or_create_user(username)
+
+        conversation = Conversation(
+            user_id=user.id,
+            session_id=str(uuid4()),
             title=title
         )
 
