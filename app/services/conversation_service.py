@@ -14,12 +14,13 @@ from app.models.conversation import Conversation
 from app.models.message import Message
 from sqlalchemy import and_
 from app.services.title_service import TitleService
-
+from app.services.cache_service import CacheService
 class ConversationService:
 
     def __init__(self, db: Session):
         self.db = db
         self.title_service = TitleService()
+        self.cache_service = CacheService()
 
     def get_or_create_user(self, username: str):
         user = self.db.query(User).filter(
@@ -71,12 +72,7 @@ class ConversationService:
             f"User '{user.username}' started session '{session_id}'."
         )
 
-        history_raw = redis_client.get(key)
-
-        if history_raw:
-            history = json.loads(history_raw)
-        else:
-            history = []
+        history = self.cache_service.get_history(key)
 
         history.append({
             "role": "user",
@@ -107,7 +103,7 @@ class ConversationService:
                 content=full_response
             )
 
-            redis_client.set(key, json.dumps(history))
+            self.cache_service.save_history(key, history)
 
             logger.info(
                 f"Saved Redis history for '{username}:{session_id}'."
