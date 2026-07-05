@@ -15,12 +15,16 @@ from app.models.message import Message
 from sqlalchemy import and_
 from app.services.title_service import TitleService
 from app.services.cache_service import CacheService
+from app.services.message_service import MessageService
+
+
 class ConversationService:
 
     def __init__(self, db: Session):
         self.db = db
         self.title_service = TitleService()
         self.cache_service = CacheService()
+        self.message_service = MessageService(db)
 
     def get_or_create_user(self, username: str):
         user = self.db.query(User).filter(
@@ -79,7 +83,7 @@ class ConversationService:
             "content": prompt
         })
 
-        self.save_message(
+        self.message_service.save_message(
             conversation_id=conversation.id,
             role="user",
             content=prompt
@@ -97,7 +101,7 @@ class ConversationService:
                 "content": full_response
             })
 
-            self.save_message(
+            self.message_service.save_message(
                 conversation_id=conversation.id,
                 role="assistant",
                 content=full_response
