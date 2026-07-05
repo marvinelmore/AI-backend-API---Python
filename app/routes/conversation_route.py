@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from app.auth.dependencies import get_current_user
 from app.database.dependencies import get_db
 from app.services.conversation_service import ConversationService
+from app.models.conversation_request import UpdateConversationRequest
 
 router = APIRouter(prefix="/conversations", tags=["Conversations"])
 
@@ -62,6 +63,30 @@ async def get_conversation_messages(
         )
 
     return messages
+
+
+@router.patch("/{conversation_id}")
+async def rename_conversation(
+    conversation_id: int,
+    request: UpdateConversationRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    service = ConversationService(db)
+
+    conversation = service.rename_conversation(
+        username=current_user.username,
+        conversation_id=conversation_id,
+        title=request.title
+    )
+
+    if conversation is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found"
+        )
+
+    return conversation
 
 
 @router.delete("/{conversation_id}")

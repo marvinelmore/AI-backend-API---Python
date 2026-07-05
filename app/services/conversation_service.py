@@ -248,3 +248,27 @@ class ConversationService:
                 Conversation.id == conversation_id,
                 Conversation.user_id == user.id
             )).first()
+
+    def rename_conversation(
+            self,
+            username: str,
+            conversation_id: int,
+            title: str
+    ):
+        user = self.get_or_create_user(username)
+
+        conversation = self.db.query(Conversation).filter(
+            and_(
+                Conversation.id == conversation_id,
+                Conversation.user_id == user.id
+            )).first()
+
+        if not conversation:
+            return None
+
+        conversation.title = title
+
+        self.db.commit()
+        self.db.refresh(conversation)
+
+        return conversation
