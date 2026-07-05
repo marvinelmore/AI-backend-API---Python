@@ -1,0 +1,50 @@
+from uuid import uuid4
+from sqlalchemy import and_
+from app.models.conversation import Conversation
+
+
+class ConversationRepository:
+
+    def __init__(self, db):
+        self.db = db
+
+    def create_conversation(
+        self,
+        user_id: int,
+        title: str = "New Conversation"
+    ):
+        conversation = Conversation(
+            user_id=user_id,
+            session_id=str(uuid4()),
+            title=title
+        )
+
+        self.db.add(conversation)
+        self.db.commit()
+        self.db.refresh(conversation)
+
+        return conversation
+
+    def get_by_id_for_user(
+        self,
+        conversation_id: int,
+        user_id: int
+    ):
+        return self.db.query(Conversation).filter(
+            and_(
+                Conversation.id == conversation_id,
+                Conversation.user_id == user_id
+            )
+        ).first()
+
+    def get_by_session_for_user(
+        self,
+        user_id: int,
+        session_id: str
+    ):
+        return self.db.query(Conversation).filter(
+            and_(
+                Conversation.user_id == user_id,
+                Conversation.session_id == session_id
+            )
+        ).first()

@@ -16,6 +16,7 @@ from sqlalchemy import and_
 from app.services.title_service import TitleService
 from app.services.cache_service import CacheService
 from app.services.message_service import MessageService
+from app.services.conversation_repository import ConversationRepository
 
 
 class ConversationService:
@@ -25,6 +26,7 @@ class ConversationService:
         self.title_service = TitleService()
         self.cache_service = CacheService()
         self.message_service = MessageService(db)
+        self.conversation_repository = ConversationRepository(db)
 
     def get_or_create_user(self, username: str):
         user = self.db.query(User).filter(
@@ -59,18 +61,18 @@ class ConversationService:
             conversation_id=conversation_id
         )
 
+        user = self.get_or_create_user(username)
+
+        conversation = self.conversation_repository.get_by_id_for_user(
+            conversation_id=conversation_id,
+            user_id=user.id
+        )
+
         if not conversation:
             return None
 
         session_id = conversation.session_id
         key = f"user:{username}:session:{session_id}"
-        user = self.get_or_create_user(username)
-
-        conversation = self.get_or_create_conversation(
-            user_id=user.id,
-            session_id=session_id,
-            prompt=prompt
-        )
 
         logger.info(
             f"User '{user.username}' started session '{session_id}'."
