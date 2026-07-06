@@ -31,16 +31,18 @@ async def create_conversation(
 
 @router.get("")
 async def get_conversations(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     service = ConversationService(db)
 
-    conversations = service.get_user_conversations(
-        current_user.username
+    return service.get_user_conversations(
+        username=current_user.username,
+        page=page,
+        page_size=page_size
     )
-
-    return conversations
 
 
 @router.get("/{conversation_id}/messages")

@@ -49,14 +49,21 @@ class ConversationRepository:
             )
         ).first()
 
-    def get_all_for_user(self, user_id: int):
+    def get_all_for_user(
+            self,
+            user_id: int,
+            page: int = 1,
+            page_size: int = 20
+    ):
+        offset = (page - 1) * page_size
+
         return self.db.query(Conversation).filter(
             and_(
                 Conversation.user_id == user_id
             )
         ).order_by(
             Conversation.created_at.desc()
-        ).all()
+        ).offset(offset).limit(page_size).all()
 
     def rename_for_user(
             self,

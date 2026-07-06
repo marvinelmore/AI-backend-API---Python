@@ -193,14 +193,19 @@ class ConversationService:
 
         return message
 
-    def get_user_conversations(self, username: str):
+    def get_user_conversations(
+            self,
+            username: str,
+            page: int = 1,
+            page_size: int = 20
+    ):
         user = self.user_service.get_or_create_user(username)
-        return self.db.query(Conversation).filter(
-         and_(
-          Conversation.user_id == user.id
-         )).order_by(
-            Conversation.created_at.desc()
-         ).all()
+
+        return self.conversation_repository.get_all_for_user(
+            user_id=user.id,
+            page=page,
+            page_size=page_size
+        )
 
     def get_conversation_messages(
             self,
