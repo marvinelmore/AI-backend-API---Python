@@ -298,3 +298,15 @@ class ConversationService:
             conversation=conversation,
             title=title
         )
+
+    def search_conversations(
+            self,
+            username: str,
+            search: str
+    ):
+        user = self.user_service.get_or_create_user(username)
+
+        return self.conversation_repository.search_for_user(
+            user_id=user.id,
+            search=search
+        )

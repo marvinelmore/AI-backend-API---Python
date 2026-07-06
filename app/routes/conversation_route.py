@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from app.auth.dependencies import get_current_user
@@ -112,3 +112,17 @@ async def delete_conversation(
         "success": True,
         "message": "Conversation deleted successfully"
     }
+
+
+@router.get("/search")
+async def search_conversations(
+    q: str = Query(...),
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    service = ConversationService(db)
+
+    return service.search_conversations(
+        username=current_user.username,
+        search=q
+    )

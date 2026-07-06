@@ -1,5 +1,5 @@
 from uuid import uuid4
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from app.models.conversation import Conversation
 
 
@@ -108,3 +108,17 @@ class ConversationRepository:
         self.db.refresh(conversation)
 
         return conversation
+
+    def search_for_user(
+            self,
+            user_id: int,
+            search: str
+    ):
+        return self.db.query(Conversation).filter(
+            and_(
+                Conversation.user_id == user_id,
+                Conversation.title.ilike(f"%{search}%")
+            )
+        ).order_by(
+            Conversation.created_at.desc()
+        ).all()
