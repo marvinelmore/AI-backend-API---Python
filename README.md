@@ -96,6 +96,13 @@ app/
 | POST | `/chat/stream/{conversation_id}` | Stream AI responses. | ✅ Complete |
 | GET | `/health` | Health check endpoint. | ✅ Complete |
 ---
+
+
+<p align="center">
+  <img src="app/assets/doc-apis-list.png" alt="AI Backend API Banner" width="100%">
+</p>
+
+
 ## Running the Project
 
 Install dependencies:
