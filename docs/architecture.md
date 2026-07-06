@@ -30,17 +30,31 @@
 Client
    │
    ▼
-Route
+FastAPI Routes
+   │
+   ▼
+JWT Authentication
    │
    ▼
 Conversation Service
    │
-   ├────────► PostgreSQL
+   ├──────────────┐
+   ▼              ▼
+User Service   Title Service
+   │              │
+   ▼              ▼
+Conversation Repository
    │
-   └────────► Redis
-                  │
-                  ▼
-              OpenAI
+   ├──────────────┐
+   ▼              ▼
+Message Service  Cache Service
+   │              │
+   ▼              ▼
+ PostgreSQL      Redis
+        \        /
+         \      /
+          ▼    ▼
+        OpenAI GPT
 ```
 
 ## Request Flow
