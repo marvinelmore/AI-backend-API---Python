@@ -16,12 +16,15 @@ Production-ready AI Backend built with FastAPI, OpenAI, Redis, Docker, and JWT A
 
 <p align="center">
 
-![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688?logo=fastapi)
-![OpenAI](https://img.shields.io/badge/OpenAI-API-412991?logo=openai)
-![Redis](https://img.shields.io/badge/Redis-Database-DC382D?logo=redis)
-![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker)
-![JWT](https://img.shields.io/badge/JWT-Authentication-black?logo=jsonwebtokens)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)
+![Alembic](https://img.shields.io/badge/Alembic-4B5563?style=for-the-badge&logo=alembic&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
 </p>
 A production-style AI backend built with **FastAPI**, **OpenAI**, **Redis**, and **JWT Authentication**.
