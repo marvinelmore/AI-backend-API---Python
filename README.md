@@ -7,7 +7,7 @@
 <h1 align="center">AI Backend API</h1>
 
 <p align="center">
-Production-ready AI Backend built with FastAPI, OpenAI, Redis, Docker, and JWT Authentication.
+Production-ready AI Backend built with FastAPI, OpenAI, Redis, PostgreSQL, SQLAlchemy, Docker, and JWT Authentication.
 </p>
 
 <p align="center">
@@ -27,7 +27,6 @@ Production-ready AI Backend built with FastAPI, OpenAI, Redis, Docker, and JWT A
 ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
 </p>
-A production-style AI backend built with **FastAPI**, **OpenAI**, **Redis**, and **JWT Authentication**.
 
 This project demonstrates modern backend engineering practices, including secure authentication, streaming AI responses, centralized configuration, structured logging, Redis-backed conversation memory, and production-ready API architecture.
 
