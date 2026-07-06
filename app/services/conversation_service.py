@@ -72,6 +72,11 @@ class ConversationService:
         if not conversation:
             return None
 
+        conversation = self.generate_title_if_needed(
+            conversation=conversation,
+            prompt=prompt
+        )
+
         session_id = conversation.session_id
         key = f"user:{username}:session:{session_id}"
 
@@ -278,3 +283,18 @@ class ConversationService:
         self.db.refresh(conversation)
 
         return conversation
+
+    def generate_title_if_needed(
+            self,
+            conversation,
+            prompt: str
+    ):
+        if conversation.title != "New Conversation":
+            return conversation
+
+        title = self.title_service.generate_title(prompt)
+
+        return self.conversation_repository.update_title(
+            conversation=conversation,
+            title=title
+        )

@@ -96,3 +96,15 @@ class ConversationRepository:
         self.db.commit()
 
         return True
+
+    def update_title(
+            self,
+            conversation,
+            title: str
+    ):
+        conversation.title = title
+
+        self.db.commit()
+        self.db.refresh(conversation)
+
+        return conversation
