@@ -4,21 +4,26 @@
                 Client
                    │
                    ▼
-          FastAPI REST API
+              FastAPI API
                    │
-      ┌────────────┼────────────┐
-      ▼            ▼            ▼
- Authentication   Chat API    Health API
-      │            │
-      ▼            ▼
- JWT Validation  Redis Memory
-      │            │
-      └──────┬─────┘
-             ▼
-      OpenAI Service
-             │
-             ▼
-      Streaming Response
+        JWT Authentication
+                   │
+                   ▼
+        Conversation Service
+         │        │        │
+         ▼        ▼        ▼
+   User Service  Cache   Title Service
+                   │
+            Conversation Repository
+                   │
+                   ▼
+             PostgreSQL
+                   │
+                   ▼
+                Redis
+                   │
+                   ▼
+             OpenAI GPT-4o
 ```
 
 ```text

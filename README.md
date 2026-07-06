@@ -32,31 +32,31 @@ This project demonstrates modern backend engineering practices, including secure
 
 ## Features
 
-* FastAPI REST API
-* OpenAI Chat Integration
-* Streaming AI Responses
-* JWT Authentication
-* Redis Conversation Memory
-* User-based Chat Sessions
-* Centralized Configuration
-* Shared Redis Client
-* Structured Application Logging
-* Global Exception Handling
-* Health Check Endpoint
-* Swagger/OpenAPI Documentation
+- JWT Authentication
+- Streaming AI Responses
+- PostgreSQL Persistence
+- Redis Conversation Cache
+- AI-generated Conversation Titles
+- Conversation CRUD
+- Message Persistence
+- Docker Support
+- Alembic Migrations
+- Structured Logging
+- Global Exception Handling
 
 ---
 
 ## Tech Stack
 
-* Python 3.13
-* FastAPI
-* OpenAI API
-* Redis
-* JWT
-* Pydantic
-* Uvicorn
-* python-dotenv
+- FastAPI
+- OpenAI API
+- PostgreSQL
+- SQLAlchemy
+- Alembic
+- Redis
+- JWT Authentication
+- Docker
+- Pydantic
 
 ---
 
@@ -64,30 +64,38 @@ This project demonstrates modern backend engineering practices, including secure
 
 ```text
 app/
+
 ├── auth/
 ├── core/
-│   ├── config.py
-│   ├── logger.py
-│   └── redis_client.py
+├── database/
 ├── middleware/
 ├── models/
 ├── routes/
 ├── services/
-└── main.py
+│   ├── ai_service.py
+│   ├── cache_service.py
+│   ├── conversation_service.py
+│   ├── conversation_repository.py
+│   ├── message_service.py
+│   ├── title_service.py
+│   └── user_service.py
 ```
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint     | Description               |
-| ------ | ------------ | ------------------------- |
-| POST   | /auth/login  | Generate JWT access token |
-| POST   | /chat/stream | Stream AI response        |
-| GET    | /health      | Service health check      |
-
+| Method | Endpoint | Description | Status |
+|--------|----------|-------------|--------|
+| POST | `/auth/login` | Authenticate user and return JWT. | ✅ Complete |
+| POST | `/conversations` | Create a conversation. | ✅ Complete |
+| GET | `/conversations` | List conversations. | ✅ Complete |
+| GET | `/conversations/{conversation_id}/messages` | Load conversation history. | ✅ Complete |
+| PATCH | `/conversations/{conversation_id}` | Rename conversation. | ✅ Complete |
+| DELETE | `/conversations/{conversation_id}` | Delete conversation. | ✅ Complete |
+| POST | `/chat/stream/{conversation_id}` | Stream AI responses. | ✅ Complete |
+| GET | `/health` | Health check endpoint. | ✅ Complete |
 ---
-
 ## Running the Project
 
 Install dependencies:
@@ -118,25 +126,29 @@ http://127.0.0.1:8000/docs
 
 ## Current Features
 
-* AI chat powered by OpenAI
-* Redis-backed memory
-* JWT-secured endpoints
-* Streaming responses
-* Centralized configuration
-* Production logging
-* Global exception middleware
+- 🔐 JWT Authentication
+- 🤖 OpenAI Streaming Responses
+- 💬 Conversation Management
+- 🧠 AI-Generated Conversation Titles
+- 🗄️ PostgreSQL Persistence
+- ⚡ Redis Caching
+- 🐳 Docker Support
+- 📈 Structured Logging
+- 🔄 Alembic Database Migrations
 
 ---
 
-## Planned Improvements
-
-* Docker & Docker Compose
-* PostgreSQL integration
-* Alembic migrations
-* Conversation management
-* Retrieval-Augmented Generation (RAG)
-* File upload & document chat
-* Deployment to the cloud
+## Planned Features
+- ⏳ Vector Database (pgvector)
+- ⏳ Retrieval-Augmented Generation (RAG)
+- ⏳ PDF Knowledge Uploads
+- ⏳ Semantic Search
+- ⏳ Conversation Search
+- ⏳ Pagination
+- ⏳ Favorites
+- ⏳ Conversation Archive
+- ⏳ Background Workers
+- ⏳ Rate Limiting
 
 ---
 
